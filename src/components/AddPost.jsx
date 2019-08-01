@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { firestore, auth } from '../firebase';
+
+console.warn('AUTH CURRENT USER', auth.currentUser);
 
 class AddPost extends Component {
   state = { title: '', content: '' };
@@ -8,28 +11,32 @@ class AddPost extends Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
     event.preventDefault();
+    console.warn('AUTH CURRENT USER', auth.currentUser);
 
-    const { onCreate } = this.props;
     const { title, content } = this.state;
+    const { uid, displayName, email, photoURL } = auth.currentUser || {};
 
     const post = {
-      id: Date.now().toString(),
       title,
       content,
       user: {
-        uid: '1111',
-        displayName: 'Steve Kinney',
-        email: 'steve@mailinator.com',
-        photoURL: 'http://placekitten.com/g/200/200',
+        uid,
+        displayName,
+        email,
+        photoURL
       },
       favorites: 0,
       comments: 0,
-      createdAt: new Date(),
-    }
+      createdAt: new Date()
+    };
 
-    onCreate(post);
+    try {
+      await firestore.collection('posts').add(post);
+    } catch (err) {
+      console.error('Error', err.message);
+    }
 
     this.setState({ title: '', content: '' });
   };
@@ -37,22 +44,22 @@ class AddPost extends Component {
   render() {
     const { title, content } = this.state;
     return (
-      <form onSubmit={this.handleSubmit} className="AddPost">
+      <form onSubmit={this.handleSubmit} className='AddPost'>
         <input
-          type="text"
-          name="title"
-          placeholder="Title"
+          type='text'
+          name='title'
+          placeholder='Title'
           value={title}
           onChange={this.handleChange}
         />
         <input
-          type="text"
-          name="content"
-          placeholder="Body"
+          type='text'
+          name='content'
+          placeholder='Body'
           value={content}
           onChange={this.handleChange}
         />
-        <input className="create" type="submit" value="Create Post" />
+        <input className='create' type='submit' value='Create Post' />
       </form>
     );
   }
