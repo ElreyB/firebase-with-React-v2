@@ -1,33 +1,22 @@
-import React, { Component, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { auth, createUserProfileDocument } from '../firebase';
 
-export const UserContext = createContext({ user: null });
+export const UserContext = createContext();
 
-class UserProvider extends Component {
-  state = {
-    user: null
-  };
-
-  unsubscribeFromAuth = null;
-
-  componentDidMount = async () => {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      const user = await createUserProfileDocument(userAuth);
-      console.warn('USER', user);
-      // this.setState({ user });
+const UserProvider = ({ children }) => {
+  const [authUser, setAuthUser] = useState();
+  useEffect(() => {
+    const unlisten = auth.onAuthStateChanged(authUser => {
+      authUser ? setAuthUser(authUser) : setAuthUser(null);
     });
-  };
+    return () => {
+      unlisten();
+    };
+  });
 
-  componentWillUnmount = () => {
-    this.unsubscribeFromAuth();
-  };
-
-  render() {
-    const { user } = this.state;
-    const { children } = this.props;
-
-    return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
-  }
-}
+  return (
+    <UserContext.Provider value={authUser}>{children}</UserContext.Provider>
+  );
+};
 
 export default UserProvider;

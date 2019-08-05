@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { firestore, auth } from '../firebase';
 
-console.warn('AUTH CURRENT USER', auth.currentUser);
-
 class AddPost extends Component {
   state = { title: '', content: '' };
 
@@ -13,7 +11,6 @@ class AddPost extends Component {
 
   handleSubmit = async event => {
     event.preventDefault();
-    console.warn('AUTH CURRENT USER', auth.currentUser);
 
     const { title, content } = this.state;
     const { uid, displayName, email, photoURL } = auth.currentUser || {};
