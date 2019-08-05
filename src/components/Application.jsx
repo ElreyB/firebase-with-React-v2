@@ -17,7 +17,6 @@ class Application extends Component {
           <Route exact path='/' component={Posts} />
           <Route path='/profile' component={UserProfile} />
         </Switch>
-        <Posts />
       </main>
     );
   }

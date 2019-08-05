@@ -15,6 +15,11 @@ const Post = ({ id, title, content, user, createdAt, stars, comments }) => {
   const postRef = firestore.doc(`posts/${id}`);
   const remove = () => postRef.delete();
   const updateStars = () => postRef.update({ stars: ++stars });
+  console.warn(
+    'POST PROPS \n',
+    moment(createdAt.toDate()).calendar(),
+    createdAt.toDate()
+  );
 
   return (
     <article className='Post'>

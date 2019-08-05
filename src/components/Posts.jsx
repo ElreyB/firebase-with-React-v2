@@ -5,13 +5,12 @@ import { PostContext } from '../Providers/PostsProvider';
 
 const Posts = () => {
   const posts = React.useContext(PostContext);
-  console.warn({ posts });
   return (
     <section className='Posts'>
       <AddPost />
-      {posts.map(post => (
-        <Post {...post} key={post.id} />
-      ))}
+      {posts.map(post => {
+        return <Post key={post.id} {...post} />;
+      })}
     </section>
   );
 };
