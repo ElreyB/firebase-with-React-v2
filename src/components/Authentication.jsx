@@ -6,7 +6,6 @@ import { UserContext } from '../Providers/UserProvider';
 
 const Authentication = ({ loading }) => {
   const user = React.useContext(UserContext);
-  console.warn('USER', user);
   if (loading) return null;
 
   return <div>{user ? <CurrentUser {...user} /> : <SignInAndSignUp />}</div>;

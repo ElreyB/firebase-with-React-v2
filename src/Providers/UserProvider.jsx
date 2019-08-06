@@ -4,18 +4,23 @@ import { auth, createUserProfileDocument } from '../firebase';
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [authUser, setAuthUser] = useState();
+  const [user, setUser] = useState(auth.currentUser);
   useEffect(() => {
-    const unlisten = auth.onAuthStateChanged(authUser => {
-      authUser ? setAuthUser(authUser) : setAuthUser(null);
+    const unlisten = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const authUser = await createUserProfileDocument(user, {});
+        setUser(authUser);
+      }
     });
     return () => {
       unlisten();
     };
-  });
+  }, []);
 
   return (
-    <UserContext.Provider value={authUser}>{children}</UserContext.Provider>
+    <UserContext.Provider value={user ? user : null}>
+      {children}
+    </UserContext.Provider>
   );
 };
 
