@@ -22,8 +22,8 @@ export const storage = firebase.storage();
 
 export const provider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
-const settings = { /* your settings... */ timestampsInSnapshots: true };
-firestore.settings(settings);
+// const settings = { /* your settings... */ timestampsInSnapshots: true };
+// firestore.settings();
 
 window.firebase = firebase;
 

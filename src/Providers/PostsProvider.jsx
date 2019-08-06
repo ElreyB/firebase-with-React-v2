@@ -16,6 +16,9 @@ const PostsProvider = ({ children }) => {
 
   useEffect(() => {
     unsubscribeFromFirestore();
+    return () => {
+      unsubscribeFromFirestore();
+    };
   }, []);
 
   return <PostContext.Provider value={posts}>{children}</PostContext.Provider>;

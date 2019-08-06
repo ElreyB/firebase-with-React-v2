@@ -35,7 +35,6 @@ const PostPage = ({ match, user }) => {
       unsubscribFromComments();
     };
   }, []);
-  console.warn({ post, comments, user });
 
   const createComment = comment => {
     commentsRef.add({
