@@ -4,12 +4,15 @@ import { auth, createUserProfileDocument } from '../firebase';
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(auth.currentUser);
+  const [user, setUser] = useState();
   useEffect(() => {
     const unlisten = auth.onAuthStateChanged(async user => {
       if (user) {
-        const authUser = await createUserProfileDocument(user, {});
-        setUser(authUser);
+        const userRef = await createUserProfileDocument(user, {});
+        userRef.onSnapshot(snapshot => {
+          console.warn(snapshot.data(), snapshot.id);
+          setUser({ uid: snapshot.id, ...snapshot.data() });
+        });
       }
     });
     return () => {
@@ -17,11 +20,7 @@ const UserProvider = ({ children }) => {
     };
   }, []);
 
-  return (
-    <UserContext.Provider value={user ? user : null}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 };
 
 export default UserProvider;

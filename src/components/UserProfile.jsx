@@ -1,12 +1,13 @@
 import React, { useState, useRef, useContext, useMemo } from 'react';
-import { firestore } from '../firebase';
+import { firestore, storage } from '../firebase';
 import { UserContext } from '../Providers/UserProvider';
 
 const UserProfile = () => {
   const user = useContext(UserContext);
+  const imageInput = useRef();
   const uid = useMemo(() => user && user.uid);
   const [state, setState] = useState({ displayName: '' });
-  const imageInput = useRef();
+  // const [file, setFile] = useState();
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -19,6 +20,18 @@ const UserProfile = () => {
 
     if (displayName) {
       firestore.doc(`users/${uid}`).update({ displayName });
+    }
+
+    if (imageInput) {
+      console.warn(imageInput.current.files[0].name);
+      storage
+        .ref()
+        .child('user-profiles')
+        .child(uid)
+        .child(imageInput.current.files[0].name)
+        .put(imageInput.current.files[0])
+        .then(response => response.ref.getDownloadURL())
+        .then(photoURL => firestore.doc(`users/${uid}`).update({ photoURL }));
     }
   };
 
@@ -33,7 +46,7 @@ const UserProfile = () => {
           placeholder='Display Name'
           onChange={handleChange}
         />
-        <input type='file' ref={imageInput} onChange={handleChange} />
+        <input type='file' ref={imageInput} />
         <input type='Submit' className='update' />
       </form>
     </section>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { auth } from '../firebase';
 
-import moment from 'moment';
+// import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 const CurrentUser = ({ displayName, photoURL, email, createdAt, children }) => {
@@ -14,7 +14,7 @@ const CurrentUser = ({ displayName, photoURL, email, createdAt, children }) => {
             <h2>{displayName}</h2>
           </Link>
           <p className='email'>{email}</p>
-          <p className='created-at'>{moment(createdAt.toDate()).calendar()}</p>
+          {/* <p className='created-at'>{moment(createdAt.toDate()).calendar()}</p> */}
         </div>
       </div>
       <div>

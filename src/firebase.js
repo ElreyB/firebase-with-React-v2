@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/storage';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -8,7 +9,7 @@ const firebaseConfig = {
   authDomain: 'think-piece-42da4.firebaseapp.com',
   databaseURL: 'https://think-piece-42da4.firebaseio.com',
   projectId: 'think-piece-42da4',
-  storageBucket: '',
+  storageBucket: 'think-piece-42da4.appspot.com',
   messagingSenderId: '338523536909',
   appId: '1:338523536909:web:3ba298e2d7d02e40'
 };
@@ -17,6 +18,7 @@ firebase.initializeApp(firebaseConfig);
 
 export const firestore = firebase.firestore();
 export const auth = firebase.auth();
+export const storage = firebase.storage();
 
 export const provider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
@@ -52,11 +54,7 @@ export const createUserProfileDocument = async (user, additionalData) => {
 export const getUserDocument = async uid => {
   if (!uid) return null;
   try {
-    const userDocument = await firestore
-      .collection('users')
-      .doc(uid)
-      .get();
-    return { uid, ...userDocument.data() };
+    return firestore.collection('users').doc(uid);
   } catch (error) {
     console.error('Error fetching user', error.message);
   }
