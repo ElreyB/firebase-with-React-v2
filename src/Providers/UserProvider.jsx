@@ -5,12 +5,12 @@ export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState();
+
   useEffect(() => {
-    const unlisten = auth.onAuthStateChanged(async user => {
-      if (user) {
-        const userRef = await createUserProfileDocument(user, {});
+    const unlisten = auth.onAuthStateChanged(async authUser => {
+      if (authUser) {
+        const userRef = await createUserProfileDocument(authUser);
         userRef.onSnapshot(snapshot => {
-          console.warn(snapshot.data(), snapshot.id);
           setUser({ uid: snapshot.id, ...snapshot.data() });
         });
       }

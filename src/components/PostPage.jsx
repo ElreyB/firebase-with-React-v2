@@ -13,7 +13,7 @@ const PostPage = ({ match, user }) => {
   const postRef = firestore.doc(`posts/${postId}`);
   const commentsRef = postRef.collection('comments');
 
-  const unsubscribFromPost = async () => {
+  const unsubscribFromPost = () => {
     postRef.onSnapshot(async snapshot => {
       const postResult = await collectionIdsAndDocs(snapshot);
       setPost(postResult);
@@ -30,10 +30,6 @@ const PostPage = ({ match, user }) => {
   useEffect(() => {
     unsubscribFromPost();
     unsubscribFromComments();
-    return () => {
-      unsubscribFromPost();
-      unsubscribFromComments();
-    };
   }, []);
 
   const createComment = comment => {
@@ -41,7 +37,6 @@ const PostPage = ({ match, user }) => {
       ...comment,
       user
     });
-    console.warn(comment);
   };
 
   return (

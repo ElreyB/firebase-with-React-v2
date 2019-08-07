@@ -7,7 +7,6 @@ const UserProfile = () => {
   const imageInput = useRef();
   const uid = useMemo(() => user && user.uid);
   const [state, setState] = useState({ displayName: '' });
-  // const [file, setFile] = useState();
 
   const handleChange = event => {
     const { name, value } = event.target;
@@ -20,10 +19,11 @@ const UserProfile = () => {
 
     if (displayName) {
       firestore.doc(`users/${uid}`).update({ displayName });
+      setState({ displayName: '' });
     }
 
-    if (imageInput) {
-      console.warn(imageInput.current.files[0].name);
+    if (imageInput.current.files.length > 0) {
+      console.warn(imageInput.current.files.length > 0);
       storage
         .ref()
         .child('user-profiles')
